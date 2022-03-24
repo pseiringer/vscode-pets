@@ -290,6 +290,11 @@ export function activate(context: vscode.ExtensionContext) {
                         petColor = PetColor.gray;
                         break;
                     case PetType.cat:
+                        choices = [PetColor.black, PetColor.brown, PetColor.red];
+                        petColor = (await vscode.window.showQuickPick(choices, {
+                            placeHolder: 'Select a color',
+                        })) as PetColor;
+                        break;
                     case PetType.dog:
                         choices = [PetColor.black, PetColor.brown];
                         petColor = (await vscode.window.showQuickPick(choices, {
@@ -520,10 +525,16 @@ function normalizeColor(petColor: PetColor, petType: PetType): PetColor {
     if (petType === PetType.crab) {
         return PetColor.red;
     }
-    if (
-        (petType === PetType.dog || petType === PetType.cat) &&
+    if (petType === PetType.dog &&
         petColor !== PetColor.brown &&
         petColor !== PetColor.black
+    ) {
+        return PetColor.brown;
+    }
+    if (petType === PetType.cat &&
+        petColor !== PetColor.brown &&
+        petColor !== PetColor.black &&
+        petColor !== PetColor.red
     ) {
         return PetColor.brown;
     }
